@@ -1,23 +1,33 @@
 import React from 'react';
+
+// Components
+import QuoteText from '../QuoteText';
+import QuoteAuthor from '../QuoteAuthor';
+import TweetLink from '../TweetLink';
+import GetQuoteButton from '../GetQuoteButton';
+
 import { randomItem } from '../../helpers';
 
 const endpoint =
   'https://gist.githubusercontent.com/jonrutter/400699473fcb2e61ae4584564cf76c4d/raw/72cfe8b4b1b95b4b9c464cdcdd29fdd5f2e7004b/quotes.json';
 
 // Keeping the list of quotes as a regular variable instead of state, because the quotes will not be changed over the life of the program
-let quotes;
+// let quotes;
 
 class QuoteBox extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      quotes: [],
       selectedQuote: { quote: '', author: '' },
     };
     this.setRandomQuote = this.setRandomQuote.bind(this);
   }
 
   setRandomQuote() {
-    this.setState({ selectedQuote: randomItem(quotes) });
+    this.setState((prevState) => ({
+      selectedQuote: randomItem(prevState.quotes),
+    }));
   }
 
   componentDidMount() {
@@ -25,19 +35,23 @@ class QuoteBox extends React.Component {
     fetch(endpoint)
       .then((response) => response.json())
       .then((data) => {
-        quotes = data.quotes;
+        this.setState({ quotes: data.quotes });
         this.setRandomQuote();
       });
   }
 
   render() {
-    if (quotes) {
+    if (this.state.quotes.length > 0) {
+      const quote = this.state.selectedQuote.quote;
+      const author = this.state.selectedQuote.author;
       return (
         <main className="quotebox" id="quote-box">
-          <h1 className="quotebox__quote" id="text">
-            {this.state.selectedQuote.quote}
-          </h1>
-          <p className="quotebox__author">{this.state.selectedQuote.author}</p>
+          <QuoteText quote={quote} />
+          <QuoteAuthor author={author} />
+          <div className="quotebox__buttons">
+            <TweetLink quote={quote} author={author} />
+            <GetQuoteButton handleClick={this.setRandomQuote} />
+          </div>
         </main>
       );
     } else {
