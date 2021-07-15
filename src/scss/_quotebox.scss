@@ -6,4 +6,19 @@
   border-radius: 0.5rem;
   margin: auto;
   padding: 2rem 3rem;
+
+  &__text {
+    font-size: 1.5rem;
+    font-weight: normal;
+  }
+
+  &__author {
+    text-align: right;
+    margin-bottom: 1rem;
+  }
+
+  &__buttons {
+    display: flex;
+    justify-content: space-between;
+  }
 }
