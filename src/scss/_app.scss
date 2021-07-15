@@ -1,7 +1,8 @@
 .app {
   min-height: 100vh;
   background-color: black;
-  color: white;
+  color: black;
   display: grid;
   place-items: center;
+  transition: background-color 1s, color 1s;
 }

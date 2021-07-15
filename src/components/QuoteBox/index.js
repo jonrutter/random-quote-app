@@ -28,6 +28,8 @@ class QuoteBox extends React.Component {
     this.setState((prevState) => ({
       selectedQuote: randomItem(prevState.quotes),
     }));
+
+    this.props.themeChange();
   }
 
   componentDidMount() {
@@ -44,13 +46,14 @@ class QuoteBox extends React.Component {
     if (this.state.quotes.length > 0) {
       const quote = this.state.selectedQuote.quote;
       const author = this.state.selectedQuote.author;
+      const color = this.props.themeColor;
       return (
         <main className="quotebox" id="quote-box">
           <QuoteText quote={quote} />
           <QuoteAuthor author={author} />
           <div className="quotebox__buttons">
-            <TweetLink quote={quote} author={author} />
-            <GetQuoteButton handleClick={this.setRandomQuote} />
+            <TweetLink quote={quote} author={author} color={color} />
+            <GetQuoteButton handleClick={this.setRandomQuote} color={color} />
           </div>
         </main>
       );
