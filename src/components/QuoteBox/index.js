@@ -1,11 +1,16 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+
+// styles
+import s from './QuoteBox.module.css';
 
 // Components
-import QuoteText from '../QuoteText';
-import QuoteAuthor from '../QuoteAuthor';
-import TweetLink from '../TweetLink';
-import GetQuoteButton from '../GetQuoteButton';
+import TweetButton from '../TweetButton';
+import NewQuoteButton from '../NewQuoteButton';
 
+// icons
+import { FaQuoteLeft } from 'react-icons/fa';
+
+// helpers
 import { randomItem } from '../../helpers';
 
 const endpoint =
@@ -14,53 +19,62 @@ const endpoint =
 // Keeping the list of quotes as a regular variable instead of state, because the quotes will not be changed over the life of the program
 // let quotes;
 
-class QuoteBox extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      quotes: [],
-      selectedQuote: { quote: '', author: '' },
-    };
-    this.setRandomQuote = this.setRandomQuote.bind(this);
-  }
+const QuoteBox = ({ themeColor, updateTheme }) => {
+  const [quotes, setQuotes] = useState([]);
+  const [selectedQuote, setSelectedQuote] = useState({});
 
-  setRandomQuote() {
-    this.setState((prevState) => ({
-      selectedQuote: randomItem(prevState.quotes),
-    }));
+  const updateQuote = () => {
+    setSelectedQuote(randomItem(quotes));
+  };
 
-    this.props.themeChange();
-  }
-
-  componentDidMount() {
-    // Fetching the quotes
+  useEffect(() => {
     fetch(endpoint)
       .then((response) => response.json())
       .then((data) => {
-        this.setState({ quotes: data.quotes });
-        this.setRandomQuote();
+        setQuotes(data.quotes);
       });
-  }
+  }, []);
 
-  render() {
-    if (this.state.quotes.length > 0) {
-      const quote = this.state.selectedQuote.quote;
-      const author = this.state.selectedQuote.author;
-      const color = this.props.themeColor;
-      return (
-        <main className="quotebox" id="quote-box">
-          <QuoteText quote={quote} />
-          <QuoteAuthor author={author} />
-          <div className="quotebox__buttons">
-            <TweetLink quote={quote} author={author} color={color} />
-            <GetQuoteButton handleClick={this.setRandomQuote} color={color} />
+  useEffect(() => {
+    setSelectedQuote(randomItem(quotes));
+  }, [quotes]);
+
+  if (selectedQuote && Object.keys(selectedQuote).length) {
+    const quote = selectedQuote.quote;
+    const author = selectedQuote.author;
+    return (
+      <div className={s.wrapper}>
+        <main className={s.content} id="quote-box">
+          <p className={s.quote} id="text">
+            <FaQuoteLeft /> {quote}
+          </p>
+          <p className={s.author} id="author">
+            --{author}
+          </p>
+          <div className={s.buttons}>
+            <TweetButton quote={quote} author={author} />
+            <NewQuoteButton updateQuote={updateQuote} />
           </div>
         </main>
-      );
-    } else {
-      return null;
-    }
+        <p className={s.attribution}>
+          Made by{' '}
+          <a
+            href="https://github.com/jonrutter"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Jon Rutter
+          </a>
+        </p>
+      </div>
+    );
+  } else {
+    return (
+      <div className={s.loadWrap}>
+        <h1>Loading...</h1>
+      </div>
+    );
   }
-}
+};
 
 export default QuoteBox;
