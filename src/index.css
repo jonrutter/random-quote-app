@@ -1,0 +1,36 @@
+:root {
+  font-size: 100%;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent /* 4 */;
+  -ms-text-size-adjust: 100%; /* 5 */
+  -webkit-text-size-adjust: 100%; /* 5 */
+  word-break: break-word; /* 6 */
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  font-family: Roboto, sans-serif;
+}
+
+a {
+  color: inherit;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+button {
+  border: none;
+  background-color: transparent;
+  font-size: 100%;
+  line-height: 1;
+  color: inherit;
+  font-family: inherit;
+  cursor: pointer;
+}
