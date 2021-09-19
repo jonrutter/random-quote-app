@@ -3,5 +3,6 @@ export const randomNum = (min, max) => {
 };
 
 export const randomItem = (list) => {
-  return list[randomNum(0, list.length)];
+  const randomIndex = Math.floor(Math.random() * list.length);
+  return list[randomIndex];
 };
